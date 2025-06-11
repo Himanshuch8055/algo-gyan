@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { FaEnvelope, FaLock, FaEye, FaEyeSlash, FaUser, FaGoogle, FaFacebook, FaGithub } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -13,6 +14,7 @@ const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const { signup } = useAuth();
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -35,15 +37,21 @@ const Signup = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validate()) {
       setIsLoading(true);
       // Simulate API call
-      setTimeout(() => {
-        setIsLoading(false);
-        console.log('Signup Data:', formData);
-      }, 1500);
+        try {
+        await signup(formData.name, formData.email,formData.password);
+      } catch (err) {
+        setErrors(err);
+      }finally{
+        setTimeout(() => {
+          setIsLoading(false);
+          console.log('Signup Data:', formData);
+        }, 1500);
+      }
     }
   };
 

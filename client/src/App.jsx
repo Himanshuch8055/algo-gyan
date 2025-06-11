@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import './App.css'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
 import Home from './pages/Home/Home';
 import Problems from './pages/Problems';
 import ProblemDetail from './pages/ProblemDetail';
@@ -41,6 +42,7 @@ function App() {
   return (
     <div className='lp-body lp-section--boxesBg'>
       <Router>
+        <AuthProvider>
         <Navbar theme={theme} toggleTheme={toggleTheme} />
         <main className="flex-grow">
           <Routes>
@@ -56,6 +58,7 @@ function App() {
           </Routes>
         </main>
         <Footer />
+        </AuthProvider>
       </Router>
     </div>
   );

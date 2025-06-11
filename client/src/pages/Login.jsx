@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { FaEnvelope, FaLock, FaEye, FaEyeSlash, FaGoogle, FaFacebook, FaGithub } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -8,6 +9,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const { login } = useAuth();
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -24,15 +26,24 @@ const Login = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validate()) {
       setIsLoading(true);
       // Simulate API call
+         try {
+      await login(formData.email, formData.password);
+      // navigate('/');
+    } catch (error) {
+      console.error('Login error:', error);
+      setErrors(error.message || 'Login failed. Please try again.');
+    } finally {
+      // setIsLoading(false);
       setTimeout(() => {
         setIsLoading(false);
         console.log('Login Data:', { ...formData, rememberMe });
       }, 1500);
+    }
     }
   };
 
